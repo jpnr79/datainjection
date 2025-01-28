@@ -83,7 +83,7 @@ class PluginDatainjectionModel extends CommonDBTM
         $this->infos    = new PluginDatainjectionInfoCollection();
     }
 
-    public function canViewItem()
+    public function canViewItem():bool
     {
 
         if ($this->isPrivate() && $this->fields['users_id'] != Session::getLoginUserID()) {
@@ -101,7 +101,7 @@ class PluginDatainjectionModel extends CommonDBTM
     }
 
 
-    public function canCreateItem()
+    public function canCreateItem():bool
     {
 
         if (
