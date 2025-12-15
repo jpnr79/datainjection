@@ -116,7 +116,7 @@ class PluginDatainjectionModelcsv extends CommonDBChild
     public function showSample(PluginDatainjectionModel $model)
     {
 
-        $headers = PluginDatainjectionMapping::getMappingsSortedByRank($model->fields['id']);
+        $headers = PluginDatainjectionMapping::getMappingsSortedByRank($model->fields['id'] ?? '');
         $sample = '"' . implode('"' . $this->getDelimiter() . '"', $headers) . "\"\n";
 
         header(
@@ -191,7 +191,7 @@ class PluginDatainjectionModelcsv extends CommonDBChild
    **/
     public function showAdditionnalForm(PluginDatainjectionModel $model, $options = [])
     {
-        $id = $this->getFromDBByModelID($model->fields['id']);
+        $id = $this->getFromDBByModelID($model->fields['id'] ?? '');
         $canedit = $this->can($id, UPDATE);
 
         $data = [
@@ -215,7 +215,7 @@ class PluginDatainjectionModelcsv extends CommonDBChild
         $tmp['delimiter']         = $fields['delimiter'];
         $tmp['is_header_present'] = $fields['is_header_present'];
         $csv->getFromDBByModelID($fields['id']);
-        $tmp['id']                = $csv->fields['id'];
+        $tmp['id']                = $csv->fields['id'] ?? '';
         $csv->update($tmp);
     }
 }

@@ -108,7 +108,7 @@ class PluginDatainjectionEntityInjection extends Entity implements PluginDatainj
         $root = new Entity();
         $root->getFromDb(0);
 
-        return $root->fields['name'];
+        return $root->fields['name'] ?? '';
     }
 
 

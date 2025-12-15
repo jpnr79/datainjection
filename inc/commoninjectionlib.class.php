@@ -623,7 +623,7 @@ class PluginDatainjectionCommonInjectionLib
                             ],
                         );
                         if ($result !== false) {
-                            $input['entities_id'] = $entity->fields['id'];
+                            $input['entities_id'] = $entity->fields['id'] ?? '';
                         }
                         $sons = getSonsOf('glpi_entities', $input['entities_id']);
                         if ($result === false && !empty($sons)) {
@@ -635,7 +635,7 @@ class PluginDatainjectionCommonInjectionLib
                                     ],
                                 );
                                 if ($result !== false) {
-                                    $input['entities_id'] = $entity->fields['id'];
+                                    $input['entities_id'] = $entity->fields['id'] ?? '';
                                     break;
                                 }
                             }
@@ -1735,7 +1735,7 @@ class PluginDatainjectionCommonInjectionLib
                             $this->setValueForItemtype(
                                 $itemtype,
                                 'template_name',
-                                $item->fields['template_name'],
+                                $item->fields['template_name'] ?? '',
                             );
                             $this->setValueForItemtype($itemtype, '_oldID', $value);
                         }
@@ -2052,7 +2052,7 @@ class PluginDatainjectionCommonInjectionLib
 
             $changes[2] = $add ? __s('Add from CSV file', 'datainjection') : __s('Update from CSV file', 'datainjection');
             $changes[1] = "";
-            Log::history($item->fields['id'], get_class($item), $changes);
+            Log::history($item->fields['id'] ?? '', get_class($item), $changes);
         }
     }
 

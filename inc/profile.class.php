@@ -83,7 +83,7 @@ class PluginDatainjectionProfile extends Profile
 
         if ($item instanceof Profile) {
             $profile = new self();
-            $ID   = $item->fields['id'];
+            $ID   = $item->fields['id'] ?? '';
             //In case there's no right datainjection for this profile, create it
             self::addDefaultProfileInfos(
                 $item->getID(),

@@ -162,7 +162,7 @@ class PluginDatainjectionClientInjection
         }
 
         TemplateRenderer::getInstance()->display('@datainjection/clientinjection_injection.html.twig', [
-            'model_name' => $model->fields['name'],
+            'model_name' => $model->fields['name'] ?? '',
         ]);
 
         // L'injection réelle reste côté PHP, mais tu peux déclencher l'appel Ajax ici si besoin
@@ -257,7 +257,7 @@ class PluginDatainjectionClientInjection
         //Display results form
         PluginDatainjectionSession::setParam('results', json_encode($clientinjection->results));
         PluginDatainjectionSession::setParam('error_lines', json_encode($engine->getLinesInError()));
-        $p['models_id'] = $model->fields['id'];
+        $p['models_id'] = $model->fields['id'] ?? '';
         $p['nblines']   = $nblines;
 
         unset($_SESSION['datainjection']['go']);
@@ -313,8 +313,8 @@ class PluginDatainjectionClientInjection
         $data = [
             'ok'            => $ok,
             'from_url'      => $from_url,
-            'popup_url'     => plugin_datainjection_geturl() . "front/popup.php?popup=log&amp;models_id=" . $model->fields['id'],
-            'model_id'      => $model->fields['id'],
+            'popup_url'     => plugin_datainjection_geturl() . "front/popup.php?popup=log&amp;models_id=" . $model->fields['id'] ?? '',
+            'model_id'      => $model->fields['id'] ?? '',
             'has_pdf'       => $plugin->isActivated('pdf'),
             'has_errors'    => !empty($error_lines),
         ];
@@ -337,7 +337,7 @@ class PluginDatainjectionClientInjection
 
             //If headers present
             if ($model->getBackend()->isHeaderPresent()) {
-                $headers = PluginDatainjectionMapping::getMappingsSortedByRank($model->fields['id']);
+                $headers = PluginDatainjectionMapping::getMappingsSortedByRank($model->fields['id'] ?? '');
                 fputcsv($tmpfile, $headers, $model->getBackend()->getDelimiter());
             }
 

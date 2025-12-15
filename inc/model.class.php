@@ -121,7 +121,7 @@ class PluginDatainjectionModel extends CommonDBTM
     public function canViewItem(): bool
     {
 
-        if ($this->isPrivate() && $this->fields['users_id'] != Session::getLoginUserID()) {
+        if ($this->isPrivate() && $this->fields['users_id'] ?? '' != Session::getLoginUserID()) {
             return false;
         }
 
@@ -132,7 +132,7 @@ class PluginDatainjectionModel extends CommonDBTM
             return false;
         }
 
-        return self::checkRightOnModel($this->fields['id']);
+        return self::checkRightOnModel($this->fields['id'] ?? '');
     }
 
 
@@ -141,7 +141,7 @@ class PluginDatainjectionModel extends CommonDBTM
 
         if (
             $this->isPrivate()
-            && ($this->fields['users_id'] != Session::getLoginUserID())
+            && ($this->fields['users_id'] ?? '' != Session::getLoginUserID())
         ) {
             return false;
         }
@@ -153,7 +153,7 @@ class PluginDatainjectionModel extends CommonDBTM
             return false;
         }
 
-        return self::checkRightOnModel($this->fields['id']);
+        return self::checkRightOnModel($this->fields['id'] ?? '');
     }
 
 
@@ -161,7 +161,7 @@ class PluginDatainjectionModel extends CommonDBTM
     public function loadMappings()
     {
 
-        $this->mappings->load($this->fields['id']);
+        $this->mappings->load($this->fields['id'] ?? '');
     }
 
 
@@ -169,7 +169,7 @@ class PluginDatainjectionModel extends CommonDBTM
     public function loadInfos()
     {
 
-        $this->infos->load($this->fields['id']);
+        $this->infos->load($this->fields['id'] ?? '');
     }
 
 
@@ -679,9 +679,9 @@ class PluginDatainjectionModel extends CommonDBTM
 
         $rand = mt_rand();
 
-        $status = PluginDatainjectionDropdown::getStatusLabel($this->fields['step']);
+        $status = PluginDatainjectionDropdown::getStatusLabel($this->fields['step'] ?? '');
         if (!empty($status)) {
-            $status_color = PluginDatainjectionDropdown::getStatusColor($this->fields['step']);
+            $status_color = PluginDatainjectionDropdown::getStatusColor($this->fields['step'] ?? '');
             $status_label = '<span class="badge" style="background-color: ' . $status_color . '; color:white;">' . $status . '</span>';
         }
 
@@ -691,7 +691,7 @@ class PluginDatainjectionModel extends CommonDBTM
             'type_name' => self::getTypeName(),
             'status_label' => $status_label ?? $status,
             'values' => $this->fields,
-            'replace_multiline_value' => $this->fields['replace_multiline_value'],
+            'replace_multiline_value' => $this->fields['replace_multiline_value'] ?? '',
             'rand' => $rand,
             'date_formats' => PluginDatainjectionDropdown::dateFormats(),
             'float_formats' => PluginDatainjectionDropdown::floatFormats(),
@@ -722,7 +722,7 @@ class PluginDatainjectionModel extends CommonDBTM
     {
         $data = [
             'url' => Toolbox::getItemTypeFormURL(self::class),
-            'id' => $this->fields['id'],
+            'id' => $this->fields['id'] ?? '',
         ];
 
         TemplateRenderer::getInstance()->display('@datainjection/model_validation_form.html.twig', $data);
@@ -754,14 +754,14 @@ class PluginDatainjectionModel extends CommonDBTM
 
         if (!$withtemplate && $item instanceof self) {
             $tabs[1] = self::createTabEntry(__s('Model'), 0, $item::getType(), self::getIcon());
-            if (!$this->isNewID($item->fields['id'])) {
+            if (!$this->isNewID($item->fields['id'] ?? '')) {
                 if ($canedit) {
                     $tabs[3] = self::createTabEntry(__s('File to inject', 'datainjection'), 0, $item::getType(), 'ti ti-file-download');
                 }
                 $tabs[4] = self::createTabEntry(__s('Mappings', 'datainjection'), 0, $item::getType(), 'ti ti-columns');
-                if ($item->fields['step'] > self::MAPPING_STEP) {
+                if ($item->fields['step'] ?? '' > self::MAPPING_STEP) {
                     $tabs[5] = self::createTabEntry(__s('Additional Information', 'datainjection'), 0, $item::getType(), 'ti ti-code-variable-plus');
-                    if ($canedit && $item->fields['step'] != self::READY_TO_USE_STEP) {
+                    if ($canedit && $item->fields['step'] ?? '' != self::READY_TO_USE_STEP) {
                         $tabs[6] = self::createTabEntry(__s('Validation'), 0, $item::getType(), 'ti ti-checklist');
                     }
                 }
@@ -784,7 +784,7 @@ class PluginDatainjectionModel extends CommonDBTM
 
                 case 3:
                     $options['confirm']   = 'creation';
-                    $options['models_id'] = $item->fields['id'];
+                    $options['models_id'] = $item->fields['id'] ?? '';
                     $options['add_form']  = true;
                     $options['submit']    = __s('Load this file', 'datainjection');
                     PluginDatainjectionClientInjection::showUploadFileForm($options);
@@ -795,13 +795,13 @@ class PluginDatainjectionModel extends CommonDBTM
                     break;
 
                 case 5:
-                    if ($item->fields['step'] > self::MAPPING_STEP) {
+                    if ($item->fields['step'] ?? '' > self::MAPPING_STEP) {
                         PluginDatainjectionInfo::showFormInfos($item);
                     }
                     break;
 
                 case 6:
-                    if ($item->fields['step'] > self::MAPPING_STEP) {
+                    if ($item->fields['step'] ?? '' > self::MAPPING_STEP) {
                         $item->showValidationForm();
                     }
                     break;
@@ -897,7 +897,7 @@ class PluginDatainjectionModel extends CommonDBTM
     public function prepareInputForUpdate($input)
     {
 
-        if (isset($input['is_private']) && $input['is_private'] == 1 && (isset($input['users_id']) && $input['users_id'] != $this->fields['users_id'])) {
+        if (isset($input['is_private']) && $input['is_private'] == 1 && (isset($input['users_id']) && $input['users_id'] != $this->fields['users_id'] ?? '')) {
             Session::addMessageAfterRedirect(
                 __s(
                     'You are not the initial creator of this model',
@@ -985,11 +985,11 @@ class PluginDatainjectionModel extends CommonDBTM
             ];
         } else {
             //Initialise a new backend
-            $backend = PluginDatainjectionBackend::getInstance($this->fields['filetype']);
+            $backend = PluginDatainjectionBackend::getInstance($this->fields['filetype'] ?? '');
             //Init backend with needed values
             $backend->init($unique_filename, $file_encoding);
-            $backend->setHeaderPresent($this->specific_model->fields['is_header_present']);
-            $backend->setDelimiter($this->specific_model->fields['delimiter']);
+            $backend->setHeaderPresent($this->specific_model->fields['is_header_present'] ?? '');
+            $backend->setDelimiter($this->specific_model->fields['delimiter'] ?? '');
 
             if (!$webservice) {
                 //Read n line from the CSV file if not webservice
@@ -1021,7 +1021,7 @@ class PluginDatainjectionModel extends CommonDBTM
     {
 
         $specific_model = self::getInstance($this->getFiletype());
-        $specific_model->getFromDBByModelID($this->fields['id']);
+        $specific_model->getFromDBByModelID($this->fields['id'] ?? '');
         $this->specific_model = $specific_model;
     }
 
@@ -1064,7 +1064,7 @@ class PluginDatainjectionModel extends CommonDBTM
         //Delete existing mappings only in model creation mode !!
         if ($mode == self::CREATION) {
             //If mapping still exists in DB, delete all of them !
-            $mappingCollection->deleteMappingsFromDB($this->fields['id']);
+            $mappingCollection->deleteMappingsFromDB($this->fields['id'] ?? '');
         }
 
         $rank = 0;
@@ -1076,7 +1076,7 @@ class PluginDatainjectionModel extends CommonDBTM
             ) as $data
         ) {
             $mapping = new PluginDatainjectionMapping();
-            $mapping->fields['models_id'] = $this->fields['id'];
+            $mapping->fields['models_id'] = $this->fields['id'] ?? '';
             $mapping->fields['rank']      = $rank;
             $mapping->fields['name']      = $data;
             $mapping->fields['value']     = PluginDatainjectionInjectionType::NO_VALUE;
@@ -1088,7 +1088,7 @@ class PluginDatainjectionModel extends CommonDBTM
         if ($mode == self::CREATION) {
             //Save the mapping list in DB
             $mappingCollection->saveAllMappings();
-            self::changeStep($this->fields['id'], self::MAPPING_STEP);
+            self::changeStep($this->fields['id'] ?? '', self::MAPPING_STEP);
 
             //Add redirect message
             Session::addMessageAfterRedirect(__s('The file is ok.', 'datainjection'), true, INFO);
@@ -1239,7 +1239,7 @@ class PluginDatainjectionModel extends CommonDBTM
     {
 
         $this->severaltimes_mapped
-             = PluginDatainjectionMapping::getSeveralMappedField($this->fields['id']);
+             = PluginDatainjectionMapping::getSeveralMappedField($this->fields['id'] ?? '');
     }
 
 
@@ -1267,7 +1267,7 @@ class PluginDatainjectionModel extends CommonDBTM
             foreach ($DB->doQuery($query) as $data) {
                 if ($data['itemtype'] != PluginDatainjectionInjectionType::NO_VALUE && is_a($data['itemtype'], CommonDBTM::class, true)) {
                     $item                     = new $data['itemtype']();
-                    $item->fields['itemtype'] = $model->fields['itemtype'];
+                    $item->fields['itemtype'] = $model->fields['itemtype'] ?? '';
                     if (!($item instanceof CommonDBRelation) && !$item->canCreate()) {
                         $continue = false;
                         break;
@@ -1354,7 +1354,7 @@ class PluginDatainjectionModel extends CommonDBTM
                     'check_message'  => PluginDatainjectionCommonInjectionLib::getLogLabel(PluginDatainjectionCommonInjectionLib::SUCCESS),
                     'type'           => __s('Undetermined', 'datainjection'),
                     'status_message' => PluginDatainjectionCommonInjectionLib::getLogLabel($result['status']),
-                    'itemtype'       => $model->fields['itemtype'],
+                    'itemtype'       => $model->fields['itemtype'] ?? '',
                     'url'            => '',
                     'item'           => '',
                 ];
@@ -1388,21 +1388,21 @@ class PluginDatainjectionModel extends CommonDBTM
                 }
 
                 if (isset($result[$model->fields['itemtype']])) {
-                    $tmp['item'] = $result[$model->fields['itemtype']];
-                    $url         = Toolbox::getItemTypeFormURL($model->fields['itemtype']) . "?id=" .
-                                                  $result[$model->fields['itemtype']];
+                    $tmp['item'] = $result[$model->fields['itemtype'] ?? ''];
+                    $url         = Toolbox::getItemTypeFormURL($model->fields['itemtype'] ?? '') . "?id=" .
+                                                  $result[$model->fields['itemtype'] ?? ''];
                     //redefine genericobject url of needed
                     $plugin = new Plugin();
                     if (
                         class_exists('PluginGenericobjectType')
                         && $plugin->isActivated('genericobject')
-                        && array_key_exists($model->fields['itemtype'], PluginGenericobjectType::getTypes())
+                        && array_key_exists($model->fields['itemtype'] ?? '', PluginGenericobjectType::getTypes())
                     ) {
                         $url = $CFG_GLPI['root_doc'] . "/plugins/datainjection/front/object.form.php" .
-                        "?itemtype=" . $model->fields['itemtype'] . "&id=" . $result[$model->fields['itemtype']];
+                        "?itemtype=" . $model->fields['itemtype'] ?? '' . "&id=" . $result[$model->fields['itemtype'] ?? ''];
                     }
 
-                    $tmp['url']  = "<a href='" . $url . "'>" . $result[$model->fields['itemtype']] . "</a>";
+                    $tmp['url']  = "<a href='" . $url . "'>" . $result[$model->fields['itemtype'] ?? ''] . "</a>";
                 }
 
                 if ($result['status'] == PluginDatainjectionCommonInjectionLib::SUCCESS) {
