@@ -132,14 +132,14 @@ class PluginDatainjectionInjectionType
             $p[$key] = $value;
         }
 
-        $mappings_id = $mapping_or_info->fields['id'] ?? '';
+        $mappings_id = (($mapping_or_info->fields['id'] ?? ''));
         $values      = [];
 
         if (
             ($p['itemtype'] == self::NO_VALUE)
-            && ($mapping_or_info->fields['itemtype'] ?? '' != self::NO_VALUE)
+            && ((($mapping_or_info->fields['itemtype'] ?? '')) != self::NO_VALUE)
         ) {
-            $p['itemtype'] = $mapping_or_info->fields['itemtype'] ?? '';
+            $p['itemtype'] = (($mapping_or_info->fields['itemtype'] ?? ''));
         }
 
         //Add null value

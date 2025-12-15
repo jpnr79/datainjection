@@ -67,7 +67,7 @@ if (isset($_POST["update"])) {
         $model = new PluginDatainjectionModel();
         $model->getFromDB($_POST['models_id']);
 
-        if ($model->fields['step'] ?? '' != PluginDatainjectionModel::READY_TO_USE_STEP) {
+        if ((($model->fields['step'] ?? '')) != PluginDatainjectionModel::READY_TO_USE_STEP) {
             PluginDatainjectionModel::changeStep(
                 $_POST['models_id'],
                 PluginDatainjectionModel::OTHERS_STEP,

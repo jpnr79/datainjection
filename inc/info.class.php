@@ -120,13 +120,13 @@ class PluginDatainjectionInfo extends CommonDBTM
             $infos_id                  = -1;
             $info                      = new PluginDatainjectionInfo();
             $info->fields['id']        = -1;
-            $info->fields['models_id'] = $model->fields['id'] ?? '';
+            $info->fields['models_id'] = (($model->fields['id'] ?? ''));
             $info->getEmpty();
 
             $rand = PluginDatainjectionInjectionType::dropdownLinkedTypes(
                 $info,
                 ['primary_type'
-                                                                        => $model->fields['itemtype'] ?? '',
+                                                                        => (($model->fields['itemtype'] ?? '')),
                 ],
             );
             echo "</td>";
@@ -136,7 +136,7 @@ class PluginDatainjectionInfo extends CommonDBTM
 
             echo "<tr>";
             echo "<td class='tab_bg_2 center' colspan='4'>";
-            echo "<input type='hidden' name='models_id' value='" . $model->fields['id'] ?? '' . "'>";
+            echo "<input type='hidden' name='models_id' value='" . (($model->fields['id'] ?? '')) . "'>";
             echo "<input type='submit' name='update' value='" . _sx('button', 'Add') . "' class='submit' >";
             echo "</td></tr>";
 
@@ -155,7 +155,7 @@ class PluginDatainjectionInfo extends CommonDBTM
     public static function showFormInfos(PluginDatainjectionModel $model)
     {
 
-        $canedit = $model->can($model->fields['id'] ?? '', UPDATE);
+        $canedit = $model->can((($model->fields['id'] ?? '')), UPDATE);
         self::showAddInfo($model, $canedit);
 
         $model->loadInfos();
@@ -174,7 +174,7 @@ class PluginDatainjectionInfo extends CommonDBTM
             echo "</tr>";
 
             foreach ($model->getInfos() as $info) {
-                $infos_id     = $info->fields['id'] ?? '';
+                $infos_id     = (($info->fields['id'] ?? ''));
                 echo "<tr class='tab_bg_1'>";
                 if ($canedit) {
                     echo "<td width='10'>";
@@ -189,7 +189,7 @@ class PluginDatainjectionInfo extends CommonDBTM
                 $rand = PluginDatainjectionInjectionType::dropdownLinkedTypes(
                     $info,
                     ['primary_type'
-                                                                          => $model->fields['itemtype'] ?? '',
+                                                                          => (($model->fields['itemtype'] ?? '')),
                     ],
                 );
                 echo "</td>";
@@ -200,7 +200,7 @@ class PluginDatainjectionInfo extends CommonDBTM
             if ($canedit) {
                 echo "<tr>";
                 echo "<td class='tab_bg_2 center' colspan='4'>";
-                echo "<input type='hidden' name='models_id' value='" . $model->fields['id'] ?? '' . "'>";
+                echo "<input type='hidden' name='models_id' value='" . (($model->fields['id'] ?? '')) . "'>";
                 echo "<input type='submit' name='update' value='" . _sx('button', 'Save') . "' class='submit'>";
                 echo "</td></tr>";
 
@@ -287,7 +287,7 @@ class PluginDatainjectionInfo extends CommonDBTM
             'model' => $model,
             'modeltype' => $modeltype,
             'has_sample' => $modeltype->haveSample(),
-            'comment' => $model->fields['comment'] ?? '',
+            'comment' => (($model->fields['comment'] ?? '')),
             'session_infos' => $_SESSION['datainjection']['infos'] ?? [],
         ];
 
@@ -312,11 +312,11 @@ class PluginDatainjectionInfo extends CommonDBTM
     {
 
         $injectionClass
-        = PluginDatainjectionCommonInjectionLib::getInjectionClassInstance($info->fields['itemtype'] ?? '');
+        = PluginDatainjectionCommonInjectionLib::getInjectionClassInstance((($info->fields['itemtype'] ?? '')));
         $option
         = PluginDatainjectionCommonInjectionLib::findSearchOption(
-            $injectionClass->getOptions($info->fields['itemtype'] ?? ''),
-            $info->fields['value'] ?? '',
+            $injectionClass->getOptions((($info->fields['itemtype'] ?? ''))),
+            (($info->fields['value'] ?? '')),
         );
         if ($option) {
             echo "<td>" . $option['name'] . "</td><td>";

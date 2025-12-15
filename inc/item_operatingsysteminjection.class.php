@@ -121,7 +121,7 @@ class PluginDatainjectionItem_OperatingsystemInjection extends Item_OperatingSys
         ]);
         if ($matching_os->count() > 0) {
             $item_operatingsystem->getFromResultSet($matching_os->current());
-            return $item_operatingsystem->fields['id'] ?? '';
+            return (($item_operatingsystem->fields['id'] ?? ''));
         } else {
             return false;
         }

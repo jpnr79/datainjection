@@ -97,7 +97,7 @@ class PluginDatainjectionMapping extends CommonDBTM
         /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
-        $canedit = $model->can($model->fields['id'] ?? '', UPDATE);
+        $canedit = $model->can((($model->fields['id'] ?? '')), UPDATE);
 
         $lines = isset($_SESSION['datainjection']['lines']) ? unserialize($_SESSION['datainjection']['lines']) : [];
 
@@ -130,9 +130,9 @@ class PluginDatainjectionMapping extends CommonDBTM
         foreach ($model->getMappings() as $mapping) {
             $mappings_id     = $mapping->getID();
             echo "<tr class='tab_bg_1'>";
-            echo "<td class='center'>" . $mapping->fields['name'] ?? '' . "</td>";
+            echo "<td class='center'>" . (($mapping->fields['name'] ?? '')) . "</td>";
             echo "<td class='center'>";
-            $options = ['primary_type' => $model->fields['itemtype'] ?? ''];
+            $options = ['primary_type' => (($model->fields['itemtype'] ?? ''))];
             PluginDatainjectionInjectionType::dropdownLinkedTypes($mapping, $options);
             echo "</td>";
             echo "<td class='center'><span id='span_field_$mappings_id'>";
@@ -142,7 +142,7 @@ class PluginDatainjectionMapping extends CommonDBTM
 
         if ($canedit) {
             echo "<tr> <td class='tab_bg_2 center' colspan='4'>";
-            echo "<input type='hidden' name='models_id' value='" . $model->fields['id'] ?? '' . "'>";
+            echo "<input type='hidden' name='models_id' value='" . (($model->fields['id'] ?? '')) . "'>";
             echo "<input type='submit' name='update' value='" . _sx('button', 'Save') . "' class='submit'>";
             echo "</td></tr>";
         }
