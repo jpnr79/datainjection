@@ -1,3 +1,4 @@
+use GlpiPlugin\Datainjection\Model;
 <?php
 
 /**
@@ -35,6 +36,9 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownSelectModel.php")) {
 }
 
 Session::checkCentralAccess();
+
+// Example usage of namespaced class (update as needed for actual logic)
+// Model::someStaticMethod(...);
 
 if (
     isset($_SESSION['datainjection']['models_id'])
