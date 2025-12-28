@@ -1,3 +1,14 @@
+function plugin_datainjection_check_prerequisites() {
+    if (version_compare(GLPI_VERSION, PLUGIN_DATAINJECTION_MIN_GLPI, 'lt')) {
+        Toolbox::logInFile('datainjection', sprintf(
+            'ERROR [%s:%s] GLPI version too low: %s, user=%s',
+            __FILE__, __FUNCTION__, GLPI_VERSION, $_SESSION['glpiname'] ?? 'unknown'
+        ));
+        echo "This plugin requires GLPI >= " . PLUGIN_DATAINJECTION_MIN_GLPI;
+        return false;
+    }
+    return true;
+}
 <?php
 if (!defined('GLPI_ROOT')) { define('GLPI_ROOT', realpath(__DIR__ . '/../..')); }
 
