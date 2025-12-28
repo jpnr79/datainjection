@@ -1,9 +1,25 @@
 function plugin_datainjection_check_prerequisites() {
-    if (version_compare(GLPI_VERSION, PLUGIN_DATAINJECTION_MIN_GLPI, 'lt')) {
-        Toolbox::logInFile('datainjection', sprintf(
+    // GLPI 11+ compatible version check: read from version file
+    $glpi_version = 'unknown';
+    $version_file = dirname(__DIR__, 2) . '/version';
+    if (file_exists($version_file)) {
+        $glpi_version = trim(file_get_contents($version_file));
+    }
+    if (version_compare($glpi_version, PLUGIN_DATAINJECTION_MIN_GLPI, '<')) {
+        $msg = sprintf(
             'ERROR [%s:%s] GLPI version too low: %s, user=%s',
-            __FILE__, __FUNCTION__, GLPI_VERSION, $_SESSION['glpiname'] ?? 'unknown'
-        ));
+            __FILE__, __FUNCTION__, $glpi_version, $_SESSION['glpiname'] ?? 'unknown'
+        );
+        try {
+            if (class_exists('Toolbox') && method_exists('Toolbox', 'logInFile')) {
+                @Toolbox::logInFile('datainjection', $msg);
+            } else {
+                $logfile = __DIR__ . '/datainjection_error.log';
+                file_put_contents($logfile, $msg . "\n", FILE_APPEND);
+            }
+        } catch (\Throwable $e) {
+            // Fallback: ignore logging errors
+        }
         echo "This plugin requires GLPI >= " . PLUGIN_DATAINJECTION_MIN_GLPI;
         return false;
     }
